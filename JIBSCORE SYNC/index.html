@@ -1,0 +1,2904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JIIB$CORE SYNC</title>
+  <style>
+ /* General */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background-color: #f0f2f5;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Navigation */
+    nav {
+      background: linear-gradient(90deg, #2c3e50, #3498db);
+      padding: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    nav button {
+      background: #ffffff;
+      color: #1d466f;
+      border: none;
+      padding: 10px 20px;
+      margin: 0 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.3s, transform 0.1s;
+    }
+
+    nav button:hover {
+      background: #e0e0e0;
+      transform: translateY(-2px);
+    }
+
+    nav button:active {
+      transform: translateY(0);
+    }
+
+    nav button.active{
+      background-color: #1b2227;
+      color: white;
+    }
+
+    .nav button.active .dark-mode {
+      background-color: black;
+      color: white;
+    }
+
+    /* Dashboard */
+    #dashboard {
+      padding: 30px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    #dashboard h1 {
+      font-size: 2.2rem;
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #dashboard p.welcome {
+      font-size: 1.1rem;
+      color: #555;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .stats-card {
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .stats-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .stats-card h3 {
+      font-size: 1.3rem;
+      color: #2c3e50;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stats-card h3::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    .stats-card.students h3::before {
+      background-image: url(students.png);
+    }
+
+    .stats-card.subjects h3::before {
+      background-image: url();
+    }
+
+    .stats-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .stats-card li {
+      font-size: 1rem;
+      color: #333;
+      padding: 8px 0;
+      border-bottom: 1px solid #eBecef;
+    }
+
+    .stats-card li:last-child {
+      border-bottom: none;
+    }
+
+    .stats-card li strong {
+      color: #2c3e50;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+      .stats-card {
+        padding: 15px;
+      }
+    }
+
+    /* Pages */
+    .page {
+      display: none;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    h1, h3 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+    }
+
+    h1 { font-size: 2rem; }
+    h3 { font-size: 1.2rem; }
+    h4 { border-bottom: 2px solid #3b82f6; margin: 9px 0; }
+
+    h2 {
+      text-align: center;
+      font-size: 15pt;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      color: #1e3a8a;
+    }
+
+    h5 {
+      font-size: 15px;
+      word-spacing: 20px;
+      color: solid black;
+      text-align: left;
+    }
+
+    /* Forms */
+    .form-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    input, select, button {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+    }
+
+    button {
+      background: #3498db;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #2980b9;
+    }
+
+    /* Floating Error */
+    .floating-error {
+      position: fixed;
+      top: 100px;
+      left: 50%;
+      transform: translateX(-50%); 
+      right: 20px;
+      z-index: 1001;
+      background-color: #e74c3c; 
+      color: white;
+      padding: 12px 20px;
+      border-radius: 5px;
+      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+      font-size: 1rem;
+      max-width: 400px;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+      cursor: pointer;
+      word-wrap: break-word;
+    }
+    
+    .floating-error.show {
+      opacity: 1;
+      transform: translateY(0);
+      color: white;
+    }
+
+    .floating-error.success {
+      background-color: #28a745;
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+      color: white;
+    }
+
+    .floating-error:hover {
+      background-color: #c0392b;
+    }
+
+    .floating-error.success:hover {
+      background-color: #218838;
+    }
+
+    .floating-error .close-toast {
+      float: right;
+      margin-left: 10px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .floating-error .close-toast:hover {
+      color: #fff;
+    }
+
+    body.dark-mode .floating-error {
+      background-color: #c0392b;
+      color: white;
+    }
+
+    body.dark-mode .floating-error.success {
+      background-color: #1e7e34;
+      color: white;
+    }
+
+    .floating-error:not(.show) {
+      display: none;
+    }
+
+    /* Highlight for invalid marks */
+    .highlight-error {
+      background-color: #ffe6e6 !important;
+      border-left: 4px solid #e74c3c;
+      transition: background-color 0.3s ease;
+    }
+    .highlight-success {
+        background-color: #e6ffe6;
+        border: 1px solid #28a745;
+    }
+    .success {
+        color: #28a745;
+        margin: 5px 0;
+    }
+
+    /* Subject Checkboxes */
+    #subjectCheckboxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    #subjectCheckboxes label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    #studentSubjects {
+        margin-top: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+    }
+    #studentSubjects ul {
+        list-style: disc;
+        padding-left: 20px;
+    }
+    #studentSubjects li {
+        font-size: 1rem;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      background: white;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      background-color: #3b82f6;
+      color: white;
+      font-weight: 500;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    tr:hover {
+      background-color: #f1f5f9;
+    }
+
+        /* Report Styling */
+    .report {
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 10mm;
+      background: white;
+      position: relative;
+    }
+
+    .report-header {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .report-table {
+      font-size: 10pt;
+      margin-bottom: 15px;
+    }
+
+    .report-table th, .report-table td {
+      padding: 4px;
+    }
+
+    .grading-table {
+      font-size: 8pt;
+      margin-bottom: 5px;
+      width: 100%;
+    }
+
+    .grading-table th, .grading-table td {
+      padding: 2px;
+      border: 1px solid #000;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .grading-table th {
+      background-color: #3b82f6;
+      color: white;
+    }
+
+    .comment-placeholder {
+      border: 1px dashed #1e3a8a;
+      min-height: 80px;
+      margin-top: 20px;
+      padding: 10px;
+      background: #f9fafb;
+    }
+
+    @media print {
+      nav, button, select, input {
+        display: none;
+      }
+
+      .page {
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #reportPreview {
+        border: none;
+        margin: 0;
+        padding: 0;
+        width: 210mm;
+        position: relative;
+        -webkit-print-color-adjust: exact;
+        background-color: #fff;
+        print-color-adjust: exact;
+      }
+
+      .report:before {
+        content: '';
+        position: absolute;
+        top: 80mm;
+        left: 60mm;
+        width: 400px;
+        height: 300px;
+        background-image: inherit;
+        background-repeat: no-repeat;
+        background-size: contain;
+        opacity: 0.2;
+        z-index: 1;
+      }
+
+      .report {
+        padding: 0; 
+        position: relative;
+        z-index: 1;
+        opacity: 2;
+        font-size: 7pt;
+        page-break-inside: avoid;
+        margin: 0;
+        background-image: radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 2px);
+        background-size: 5mm 5mm;
+        background-image: url('badge.png') !important;
+        background-repeat: no-repeat;
+        background-position: center center;
+      }
+
+      .report-table {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 1px;
+        padding: 0;
+        width: 100%;
+        margin: 0;
+        opacity: 1;
+        font-size: 10pt;
+        background-image: radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 2px);
+        background-size: 5mm 5mm;
+      }
+
+      .report-table th{
+        font-weight: bold;
+        background-color: white;
+        color: #000;
+      }
+      .report-table td, .report-table th {
+        padding: 2mm;
+        border: 2px solid #000;
+      }
+
+      .grading-table {
+        font-size: 7pt;
+        margin: 2mm 0;
+        background: rgba(255, 255, 255, 0.95);
+        border-collapse: collapse;
+      }
+
+      .grading-table td, .grading-table th {
+        padding: 1mm;
+        border: 0.5pt solid #000;
+        word-wrap: break-word;
+        max-width: 60mm;
+      }
+
+      .grading-table th {
+        background: white;
+        color: #000;
+        font-weight: bold;
+        font-size: 9pt;
+      }
+
+      .reportPreview img {
+        display: none;
+      }
+
+      .reportPreview h2 {
+        text-align: center;
+        opacity: 1;
+        font-size: 15pt;
+      }
+
+      .reportPreview h4 {
+        text-align: center;
+        font-size: 15pt;
+        font-family: "Algerian", serif;
+        color: #1e3a8a;
+      }
+
+      .reportPreview h5 {
+        text-align: center;
+        opacity: 1;
+        font-size: 15pt;
+        word-spacing: 10px;
+      }
+
+      .reportPreview p {
+        text-align: center;
+        opacity: 1;
+        font-size: 10pt;
+      }
+
+      .comment-placeholder {
+        min-height: 10px; 
+        border: 1px dashed #000;
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 3mm;
+        opacity: 1;
+        font-size: 11pt;
+        background-image: radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 2px);
+        background-size: 5mm 5mm;
+      }
+
+      @page {
+        size: A4;
+        margin: 2mm;
+      }
+    }
+
+    /* Modal */
+    #subjectModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+    #subjectModal > div {
+      background: white;
+      margin: 10% auto;
+      padding: 20px;
+      width: 300px;
+      border-radius: 5px;
+    }
+    #subjectModal ul {
+      list-style: disc;
+      padding-left: 20px;
+    }
+
+    /* Edit Subject Modal */
+    #editSubjectModal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+    #editSubjectModal .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 300px;
+      border-radius: 5px;
+    }
+    #editSubjectModal .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    #editSubjectModal .close:hover,
+    #editSubjectModal .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* Edit Student Name Modal */
+    #editStudentModal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+    #editStudentModal .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 400px;
+      border-radius: 5px;
+    }
+    #editStudentModal .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    #editStudentModal .close:hover,
+    #editStudentModal .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+  /* Dark Mode */
+    body{
+      transition: background-color 0.3s, color 0.3s;
+      background-color: white;
+      color: black;
+    }
+    body.dark-mode{
+      background-color: #121212;
+      color: #ffffff;
+    }
+    nav.dark-mode{
+      background: #1c1c1c;
+    }
+    nav.dark-mode button{
+      background: #3c3c3c;
+      color: #ffffff;
+    }
+    .stats-card.dark-mode h3{
+      color: #ffffff;
+    }
+    .page.dark-mode{
+      background-color: #1e1e1e;
+      color: #ffffff;
+    }
+    .page.dark-mode h1,
+    .page.dark-mode h2,
+    .page.dark-mode h3,
+    .page.dark-mode h4,
+    .page.dark-mode h5,
+    .page.dark-mode p{
+      color: #ffffff;
+    }
+    .page.dark-mode table{
+      background-color: #2a2a2a;
+      color: #ffffff;
+    }
+    .page.dark-mode th{
+      background-color: #3c3c3c;
+      color: #ffffff;
+    }
+    .page.dark-mode tr{
+      background-color: #2a2a2a;
+    }
+    .page.dark-mode tr:nth-child(even){
+      background-color: #3c3c3c;
+    }
+    .page.dark-mode td{
+      border-bottom: 1px solid #444;
+    }
+    .page.dark-mode td,
+    .page.dark-mode th{
+      color: #ffffff;
+    }
+    .page.dark-mode.error,
+    .page.dark-mode.success{
+      color: #e74c3c;
+    }
+    .page.dark-mode #dashboard{
+      background-color: #1e1e1e;
+      color: #ffffff;
+    }
+    .page.dark-mode.stats-card{
+      background-color: #2a2a2a;
+      color: #ffffff;
+      border: 1px solid #444;
+    }
+    .page.dark-mode.stats-card h3{
+      color: #ffffff;
+    }
+    #dashboard.dark-mode{
+      background-color: #1e1e1e;
+      color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    .welcome.dark-mode{
+      color: #ffffff;
+    }
+    .stats.dark-mode{
+      background-color: #2a2a2a;
+      color: #ffffff;
+      padding: 15px;
+    }
+    .stats-card.dark-mode{
+      background-color: #2a2a2a;
+      color: #ffffff;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    .stats-container{
+      background-color: #ffffff;
+      color: #000000;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .stats{
+      background-color: #ffffff;
+      padding: 15px;
+    }
+    .stats-card.dark-mode li{
+      color: #ffffff;
+    }
+    .stats-card.dark-mode li strong{
+      color: #ffffff;
+    }
+    .stats-card.dark-mode h1{
+      color: white;
+    }
+    #subjectModal.dark-mode{
+      background: rgba(0, 0, 0, 0.8);
+    }
+    #subjectModal.dark-mode>div{
+      background: #2a2a2a;
+      color: #ffffff;
+    }
+    .modal.dark-mode{
+     background: rgba(0, 0, 0, 0.8);
+    }
+    .modal.dark-mode>div{
+      background: #2a2a2a;
+      color: #ffffff;
+    }
+    .modal.dark-mode input[type="password"] {
+    background-color: #3c3c3c;
+    color: #ffffff;
+    border: 1px solid #444;
+    }
+    .modal.dark-mode button {
+    background-color: rgb(88, 204, 88);
+    color: #ffffff;
+    }
+    .modal.dark-mode input[type="password"]::placeholder {
+    color: #aaa;
+    }
+    .modal.dark-mode h2 {
+    color: #ffffff;
+    }
+    #editSubjectModal.dark-mode {
+      background: rgba(0, 0, 0, 0.8);
+    }
+    #editSubjectModal.dark-mode .modal-content {
+      background-color: #2a2a2a;
+      color: #ffffff;
+    }
+    #editSubjectModal.dark-mode input[type="text"] {
+      background-color: #3c3c3c;
+      color: #ffffff;
+      border: 1px solid #444;
+    }
+    #editSubjectModal.dark-mode input[type="text"]::placeholder {
+      color: #aaa;
+    }
+    #editSubjectModal.dark-mode h2 {
+      color: #ffffff;
+    }
+    #editSubjectModal.dark-mode button {
+      background-color: rgb(88, 204, 88);
+      color: #ffffff;
+    }
+    #editSubjectModal.dark-mode .close {
+      color: #aaa;
+    }
+    #editSubjectModal.dark-mode .close:hover {
+      color: #ffffff;
+    }
+    #editStudentModal.dark-mode {
+      background: rgba(0, 0, 0, 0.8);
+    }
+    #editStudentModal.dark-mode .modal-content {
+      background-color: #2a2a2a;
+      color: #ffffff;
+    }
+    #editStudentModal.dark-mode input[type="text"] {
+      background-color: #3c3c3c;
+      color: #ffffff;
+      border: 1px solid #444;
+    }
+    #editStudentModal.dark-mode input[type="text"]::placeholder {
+      color: #aaa;
+    }
+    #editStudentModal.dark-mode h2 {
+      color: #ffffff;
+    }
+    #editStudentModal.dark-mode .close {
+      color: #aaa;
+    }
+    #editStudentModal.dark-mode .close:hover {
+      color: #ffffff;
+    }
+    #changePasswordModal.dark-mode {
+      background: rgba(0, 0, 0, 0.8);
+    }
+    #changePasswordModal.dark-mode .modal-content {
+      background-color: #2a2a2a;
+      color: #ffffff;
+    }
+    #changePasswordModal.dark-mode input {
+      background-color: #3c3c3c;
+      color: #ffffff;
+      border: 1px solid #444;
+    }
+    #changePasswordModal.dark-mode h2 {
+      color: #ffffff;
+    }
+    
+    /* Dark Mode for Clear Data Password Modal */
+    #clearDataPasswordModal.dark-mode {
+    background: rgba(0, 0, 0, 0.8);
+    }
+
+    #clearDataPasswordModal.dark-mode .modal-content {
+    background-color: #2a2a2a;
+    color: #ffffff;
+    }
+
+    #clearDataPasswordModal.dark-mode input[type="password"] {
+    background-color: #3c3c3c;
+    color: #ffffff;
+    border: 1px solid #444;
+    }
+
+    #clearDataPasswordModal.dark-mode input[type="password"]::placeholder {
+    color: #aaa;
+    }
+
+    #clearDataPasswordModal.dark-mode h2,
+    #clearDataPasswordModal.dark-mode p {
+    color: #ffffff;
+    }
+
+    #clearDataPasswordModal.dark-mode button {
+    background-color: rgb(88, 204, 88);
+    color: #ffffff;
+    }
+
+    #clearDataPasswordModal.dark-mode .close {
+    color: #aaa;
+    }
+
+    #clearDataPasswordModal.dark-mode .close:hover {
+    color: #ffffff;
+    }
+    
+    /* password Modal*/
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content{
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 300px;
+      border-radius: 5px;
+    }
+    .modal button{
+    background-color: rgb(88, 204, 88);
+    color: #ffffff;
+    }
+
+    .close{
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .close:hover,
+    .close:focus{
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .error{
+      color: #e74c3c;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+    .floating-save-button{
+      position: fixed;
+      bottom: 40px;
+      right: 110px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: background 0.3s;
+      z-index: 1000;
+    }
+    .lockbutton{
+      position: fixed;
+      bottom: 100px;
+      right: 110px;
+      background-color: rgb(195, 73, 73);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: background 0.3s;
+      z-index: 1000;
+    }
+    .lockbutton:hover{
+        background-color: red;
+    }
+    .floating-save-button:hover{
+      background-color: #2980b9;
+    }
+
+    .clear-marks-button {
+      bottom: 100px;
+      right: 260px;
+      background-color: #e67e22;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+    .clear-marks-button:hover {
+      background-color: #d35400;
+    }
+
+    .change-pwd-button {
+      bottom: 100px;
+      background-color: #9b59b6;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+    .change-pwd-button:hover {
+      background-color: #8e44ad;
+    }
+    
+
+    @media print {
+      nav, button, select, input, .floating-save-button, .lockbutton, .clear-marks-button, .change-pwd-button, .year{
+        display: none !important;
+      }
+
+      .page {
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #reportPreview {
+        border: none;
+        margin: 0;
+        padding: 0;
+        width: 210mm;
+        position: relative;
+        -webkit-print-color-adjust: exact;
+        background-color: #fff;
+        print-color-adjust: exact;
+      }
+
+      .report {
+        padding: 0; 
+        position: relative;
+        z-index: 1;
+        opacity: 2;
+        font-size: 7pt;
+        page-break-inside: avoid;
+        margin: 0;
+        background-image: url('badge.png') !important;
+        background-repeat: no-repeat;
+        background-position: center center;
+      }
+
+    .midterm-report {
+      width: 297mm; 
+      min-height: 210mm;
+      margin: 0 auto;
+      padding: 15mm;
+      background: white;
+      position: relative;
+      page-break-after: always;
+    }
+
+    @media print {
+      .midterm-report {
+        page: landscape;
+      }
+    }
+      @page :landscape {
+        size: A4 landscape;
+        margin: 10mm;
+      }
+
+      .midterm-report {
+        page: landscape;
+      }
+    }
+
+    @keyframes zoomInOut {
+      0%, 20%, 50%, 80%, 100%{
+        transform: scale(0);
+        opacity: 0;
+      }
+      50%{
+        transform: scale(1.5);
+        opacity: 1;
+      }
+      100%{
+        transform: scale(1);
+        opacity: 0;
+      }
+    }
+    .zoom {
+      animation:zoomInOut 3.5s ease forwards;
+      position: absolute;
+      top: 50%;
+      left: 35%;
+      transform: translateX(-50%, -50%);
+      text-align: center;
+    }
+  </style>
+      <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js"></script>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <button data-page="dashboard" onclick="showPage('dashboard')">Dashboard</button>
+      <button data-page="students" onclick="showPage('students')">Student Management</button>
+      <button data-page="marks" onclick="showPage('marks')">Marks Entry</button>
+      <button data-page="performance" onclick="showPage('performance')">Performance Overview</button>
+      <button data-page="reports" onclick="showPage('reports')">Report Generation</button>
+      <button data-page="settings" onclick="showPage('settings')">Settings</button>
+      <button id="toggle-button">Dark mode</button>
+    </nav>
+    
+          <div id="authModal" class="modal" style="display: block;"> <!-- Visible on load -->
+        <div class="modal-content">
+          <h2>Login to JIIBSCORE SYNC🗣️</h2>
+          <input type="email" id="email" placeholder="Email" required>
+          <input type="password" id="password" placeholder="Password" required>
+          <button onclick="signIn()">Login</button>
+          <button onclick="signUp()">Sign Up (First Time)</button>
+          <div id="authError" class="error floating-error"></div>
+        </div>
+      </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="page active">
+      <h1><p class="stats-card" style="font-family: Algerian, serif" id="dashboardTitle">JIIB$CORE SYNC🗣️
+      <p class="stats-card" style="font-size: 1rem;">Welcome to the <b>JIIB$CORE SYNC</b> Termly Reporting System.<br>Navigate using the buttons above.</p></p></h1>
+      <div id="stats"></div>
+    </div>
+
+    <!-- Student Management -->
+    <div id="students" class="page">
+      <h2>Student Management</h2>
+      <div class="form-group">
+        <input type="text" id="studentName" placeholder="Student Name" required>
+        <select id="studentClass" onchange="toggleSubjectSelection()">
+          <option value="S.1">S.1</option>
+          <option value="S.2">S.2</option>
+          <option value="S.3">S.3</option>
+          <option value="S.4">S.4</option>
+        </select>
+        <input type="text" id="studentHouse" placeholder="House" required>
+        <button onclick="addStudent()">Add Student</button>
+      </div>
+      <div id="subjectSelection" class="form-group" style="display: none;">
+        <label><b><u>Select Only 2 Optional Subjects:</u></b></label>
+        <div id="subjectCheckboxes"></div>
+      </div>
+      <div id="studentError" class="error floating-error"></div>
+      <div class="form-group">
+  <label class="year">Filter by:</label>
+  <select id="filterClass" onchange="loadStudents()">
+    <option value="">All Classes</option>
+    <option value="S.1">S.1</option>
+    <option value="S.2">S.2</option>
+    <option value="S.3">S.3</option>
+    <option value="S.4">S.4</option>
+  </select>
+
+  <select id="filterHouse" onchange="loadStudents()">
+    <option value="">All Houses</option>
+    <!-- House options will be added dynamically by JavaScript -->
+  </select>
+
+  <input type="text" id="searchStudent" placeholder="Search by Name" oninput="loadStudents()">
+</div>
+      <table id="studentTable">
+        <thead><tr><th>Name</th><th>Class</th><th>House</th><th>Actions</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div id="studentSubjects" class="form-group" style="display: none;">
+        <h3>Selected Subjects</h3>
+        <ul id="subjectList"></ul>
+     </div>
+    </div>
+
+     <!-- Subject Modal -->
+  <div id="subjectModal">
+    <div>
+      <h3 id="modalStudentName"></h3>
+      <ul id="modalSubjectList"></ul>
+      <button onclick="closeSubjectModal()">Close</button>
+    </div>
+  </div>
+
+    <!-- Edit Student Name Modal -->
+    <div id="editStudentModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeEditStudentModal()">&times;</span>
+        <h2>Edit Student Details</h2>
+        <p><strong>Current Name:</strong> <span id="currentStudentNameDisplay"></span></p>
+        <br>
+        <p><strong>New Student Name</strong></p>
+        <input type="text" id="editStudentNewName" placeholder="New Student Name" required>
+        <br><br>
+        <p><strong>New Student House</strong></p>
+        <input type="text" id="editStudentNewHouse" placeholder="New House">
+        <br><br>
+        <button onclick="saveEditedStudent()">Save Changes</button>
+      </div>
+    </div>
+
+    <!-- Marks Entry -->
+    <div id="marks" class="page">
+      <h2>Marks Entry</h2>
+      <div class="form-group">
+        <select id="marksClass" onchange="updateSubjectDropdown()">
+          <option value="">Select Class</option>
+          <option value="S.1">S.1</option>
+          <option value="S.2">S.2</option>
+          <option value="S.3">S.3</option>
+          <option value="S.4">S.4</option>
+        </select>
+        <select id="marksSubject"></select>
+        <button onclick="loadMarksEntry()">Load Students</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button id="clearMarksButton" class="clear-marks-button">Clear All Marks</button>
+        <button class="change-pwd-button" onclick="showChangePasswordModal()">Change Password</button>
+      </div>
+      <div class="form-group">
+        <input type="text" id="searchMarksStudent" placeholder="Search Student by Name" oninput="loadMarksEntry()">
+      </div>
+      
+      <table id="marksTable">
+        <thead><tr><th>Name</th><th>Midterm (20)</th><th>End of Term (80)</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <button id="lockButton" onclick="toggleLock()" class="lockbutton">Unlock Marks</button>
+      
+      <div id="marksError" class="error floating-error"></div>
+      <button class="floating-save-button" onclick="saveMarks()">Save Marks</button>
+    </div>
+
+    <!------Password Modal---->
+    <div id="passwordModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closePasswordModal()">&times;</span>
+        <h2>Unlock Marks</h2>
+        <input type="password" id="unlockPassword" placeholder="Enter Password to Edit Marks">
+        <br><br><button onclick="unlockMarks()">Unlock</button>
+        <div id="modalError" class="error floating-error"></div>
+      </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeChangePasswordModal()">&times;</span>
+        <h2>Change Marks Lock Password</h2>
+        <input type="password" id="currentPassword" placeholder="Current Password"><br><br>
+        <input type="password" id="newPassword" placeholder="New Password"><br><br>
+        <input type="password" id="confirmPassword" placeholder="Confirm New Password"><br><br>
+        <button onclick="changeMarksPassword()">Change Password</button>
+        <div id="changePwdError" class="error floating-error"></div>
+      </div>
+    </div>
+
+    <!-- Clear Data Password Modal -->
+    <div id="clearDataPasswordModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeClearDataPasswordModal()">&times;</span>
+        <h2>Clear All Data - Security Check</h2>
+        <p>Enter the <strong>marks unlock password</strong> to continue:</p>
+        <input type="password" id="clearDataPasswordInput" placeholder="Enter Password">
+        <br><br>
+        <button onclick="verifyClearDataPassword()">Verify Password</button>
+        <div id="clearDataPwdError" class="error floating-error"></div>
+    </div>
+    </div>
+
+    <!-- Edit Subject Modal -->
+    <div id="editSubjectModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeEditSubjectModal()">&times;</span>
+        <h2>Edit Subject Initials</h2>
+        <input type="text" id="editSubjectName" readonly placeholder="Subject Name">
+        <br><br>
+        <input type="text" id="editSubjectTeacher" placeholder="Teacher Initials (e.g., M.N)">
+        <br><br>
+        <button onclick="saveEditSubject()">Save</button>
+      </div>
+    </div>
+
+    <!-- Performance Overview -->
+    <div id="performance" class="page">
+      <h2>Performance Overview</h2>
+      <div class="form-group">
+        <select id="perfView" onchange="loadPerformance()">
+          <option value="table">Overall Performance Table</option>
+          <option value="giants">Academic Giants</option>
+          <option value="dwarfs">Academic Dwarfs</option>
+          <option value="best-subjects">Best Done Subjects</option>
+          <option value="worst-subjects">Worst Done Subjects</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <select id="perfClass" onchange="loadPerformance()">
+          <option value="">Select Class</option>
+          <option value="S.1">S.1</option>
+          <option value="S.2">S.2</option>
+          <option value="S.3">S.3</option>
+          <option value="S.4">S.4</option>
+        </select>
+        <input type="text" id="searchPerfStudent" placeholder="Search Student by Name" oninput="loadPerformance()">
+      </div>
+      <table id="perfTable" style="padding: 0; font-size: 12px; print-color-adjust: exact; line-height: 0.9; font-weight: bold;">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Report Generation -->
+    <div id="reports" class="page">
+     <div class="form-group">
+        <label class="year"><b>Year Of Report:</b></label>
+        <p><input type="text" id="reportYearInput" placeholder="e.g. 2025" value="2025" style="width:120px;"></p>
+     </div>
+        <h3 class="year" style="color: rgb(10, 12, 56);"><u>MID - TERM RESULT SLIPS</u></h3>
+      <div class="form-group">
+        <button onclick="printMidtermReports('S.1')">Print S.1 Midterm Slips</button>
+        <button onclick="printMidtermReports('S.2')">Print S.2 Midterm Slips</button>
+        <button onclick="printMidtermReports('S.3')">Print S.3 Midterm Slips</button>
+        <button onclick="printMidtermReports('S.4')">Print S.4 Midterm Slips</button>
+      </div>
+      <h3 class="year" style="color: rgb(10, 12, 56);"><u>END OF TERM REPORTS</u></h3>
+      <div class="form-group">
+        <select id="reportClass" onchange="updateReportStudentDropdown()">
+          <option value="">Select S.1</option>
+          <option value="S.1">S.1</option>
+        </select>
+        <button onclick="printAllReports()">S.1 REPORTS</button>
+        <input type="text" id="searchReportStudent" placeholder="Search Student by Name" oninput="updateReportStudentDropdown()">
+        <select id="reportStudent"></select>
+      </div>
+      <div class="form-group">  
+        <select id="reportClass2" onchange="updateReportStudentDropdown2()">
+          <option value="">Select S.2 \ S.3 \ S.4</option>
+          <option value="S.2">S.2</option>
+          <option value="S.3">S.3</option>
+          <option value="S.4">S.4</option>
+        </select>
+        <button onclick="printAllReport()">S.2 \ S.3 \ S.4 REPORTS</button>
+        <input type="text" id="searchReportStudent2" placeholder="Search Student by Name" oninput="updateReportStudentDropdown2()">
+        <select id="reportStudent2"></select>
+      </div>
+      <div id="reportError" class="error floating-error"></div>
+      <div id="reportPreview"></div>
+    </div>
+
+    <!-- Settings -->
+    <div id="settings" class="page">
+      <h2>Settings</h2>
+      <h3>Manage Subjects</h3>
+      <div class="form-group">
+        <select id="subjectFilterClass" onchange="loadSubjects()">
+          <option value="">All Classes</option>
+          <option value="S.1">S.1</option>
+          <option value="S.2">S.2</option>
+          <option value="S.3">S.3</option>
+          <option value="S.4">S.4</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <input type="text" id="subjectName" placeholder="Subject Name" required>
+        <select id="subjectClass">
+          <option value="S.1">S.1</option>
+          <option value="S.2">S.2</option>
+          <option value="S.3">S.3</option>
+          <option value="S.4">S.4</option>
+        </select>
+        <input type="text" id="subjectTeacher" placeholder="Teacher Initials (e.g.,M.N)" required>
+        <button onclick="addSubject()">Add Subject</button>
+      </div>
+      <div id="subjectError" class="error floating-error"></div>
+      <table id="subjectTable">
+        <thead><tr><th>Subject</th><th>Class</th><th>Initials</th><th>Actions</th></tr></thead>
+        <tbody></tbody>
+      </table>
+
+      <h3>Grading System</h3>
+      <div class="form-group">
+        <input type="text" id="gradeName" placeholder="Grade (e.g., A)" required>
+        <input type="number" id="gradeMin" placeholder="Min (0-100)" required>
+        <input type="number" id="gradeMax" placeholder="Max (0-100)" required>
+        <input type="text" id="gradeDescriptor" placeholder="Descriptor" required>
+        <button onclick="addGrade()">Add Grade</button>
+      </div>
+      <div id="gradeError" class="error floating-error"></div>
+      <table id="gradeTable">
+        <thead><tr><th>Grade</th><th>Min</th><th>Max</th><th>Descriptor</th><th>Actions</th></tr></thead>
+        <tbody></tbody>
+      </table>
+
+      <h3>Import/Export Data</h3>
+      <div class="form-group">
+        <button onclick="exportData()">Export Data as JSON</button>
+        <input type="file" id="importFile" accept=".json">
+        <button onclick="importData()">Import Data</button>
+        <button onclick="clearAllData()" style="background-color:#e74c3c;">Clear All Data</button>
+      </div>
+      <div id="importExportError" class="error floating-error"></div>
+    </div>
+  </div>
+
+  <script>
+        // Firebase initialization - Replace with your config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBuc2WuCgXDzRLiK3WbT6MCMno9zW52tGI",
+      authDomain: "jiibscore-sync.firebaseapp.com",
+      projectId: "jiibscore-sync",
+      storageBucket: "jiibscore-sync.firebasestorage.app",
+      messagingSenderId: "866212594535",
+      appId: "1:866212594535:web:b54cea791ce239bf8fa5c2"
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    function signUp() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(() => {
+          showFloatingError('Account created! Data syncing enabled.', true, document.getElementById('authError'));
+          document.getElementById('authModal').style.display = 'none';
+          loadDataFromFirestore();
+        })
+        .catch(err => showFloatingError(err.message, false, document.getElementById('authError')));
+    }
+
+    function signIn() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          showFloatingError('Logged in! Data synced.', true, document.getElementById('authError'));
+          document.getElementById('authModal').style.display = 'none';
+          loadDataFromFirestore();
+        })
+        .catch(err => showFloatingError(err.message, false, document.getElementById('authError')));
+    }
+
+    // Auto-handle login state
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        document.getElementById('authModal').style.display = 'none';
+        loadDataFromFirestore();
+        // Real-time listener
+        db.collection('users').doc(user.uid).collection('apps').doc('jiib-score').onSnapshot(doc => {
+          if (doc.exists) {
+            data = doc.data();
+            showPage(document.querySelector('.page.active').id); // Refresh current page
+          }
+        });
+      } else {
+        document.getElementById('authModal').style.display = 'block';
+      }
+    });
+
+    async function loadDataFromFirestore() {
+      const user = auth.currentUser;
+      if (!user) return;
+      try {
+        const docRef = db.collection('users').doc(user.uid).collection('apps').doc('jiib-score');
+        const doc = await docRef.get();
+        if (doc.exists) {
+          data = doc.data();
+        } else {
+          // Defaults if no data
+          data = {
+            students: [],
+            subjects: {
+              'S.1': [],
+              'S.2': compulsorySubjects.map(name => ({ name, teacher: '' })),
+              'S.3': compulsorySubjects.map(name => ({ name, teacher: '' })),
+              'S.4': compulsorySubjects.map(name => ({ name, teacher: '' }))
+            },
+            marks: [],
+            grading: [
+              { grade: 'A', min: 80, max: 100, descriptor: 'EXCEPTIONAL' },
+              { grade: 'B', min: 70, max: 79, descriptor: 'OUTSTANDING' },
+              { grade: 'C', min: 60, max: 69, descriptor: 'SATISFACTORY' },
+              { grade: 'D', min: 50, max: 59, descriptor: 'BASIC' },
+              { grade: 'E', min: 0, max: 49, descriptor: 'ELEMENTARY' }
+            ],
+            lockPassword: "jiib"
+          };
+          await saveDataToFirestore();
+        }
+        correctPassword = data.lockPassword || "jiib";
+        // Refresh all UI
+        showPage(document.querySelector('.page.active').id); // Reload current page
+      } catch (err) {
+        showFloatingError('Error loading data: ' + err.message, false);
+      }
+    }
+
+    async function saveDataToFirestore() {
+      const user = auth.currentUser;
+      if (!user) return;
+      try {
+        const docRef = db.collection('users').doc(user.uid).collection('apps').doc('jiib-score');
+        await docRef.set(data);
+      } catch (err) {
+        showFloatingError('Error saving data: ' + err.message, false);
+      }
+    }
+
+    // Compulsory subjects for S.2, S.3, S.4
+    const compulsorySubjects = ['ENGLISH', 'MATHEMATICS', 'PHYSICS', 'CHEMISTRY', 'BIOLOGY', 'GEOGRAPHY', 'HISTORY'];
+
+    // Data storage
+    let data = {}; // Start empty; load from cloud
+
+    let correctPassword = "jiib"; // Will be set after load
+
+    // Helper: check if a subject has at least one mark
+    function hasAnyMark(mark) {
+      return mark && (mark.midterm != null || mark.end != null);
+    }
+
+    // Generate automatic comments
+    function generateHeadTeacherComment(descriptor) {
+      const comments = {
+        'EXCEPTIONAL': 'Excellent performance! Keep it up',
+        'OUTSTANDING': 'Very good performance. ability across most subjects.',
+        'SATISFACTORY': 'With consistent effort, you can achieve even better outcomes next term.',
+        'BASIC': 'More effort and focus are needed to improve your overall grades.',
+        'ELEMENTARY': 'Significant improvement required to reach your potential.'
+      };
+      return comments[descriptor] || 'Well done. Continue working hard to improve.';
+    }
+
+    function generateClassTeacherComment(student, cls, subjects) {
+      let lowestScore = Infinity;
+      let lowestSubjects = [];
+
+      subjects.forEach(subject => {
+        const mark = data.marks.find(m => m.studentId === student.id && m.subject === subject.name);
+        if (!hasAnyMark(mark)) return;
+        const total = (mark.midterm || 0) + (mark.end || 0);
+        if (total < lowestScore) {
+          lowestScore = total;
+          lowestSubjects = [subject.name];
+        } else if (total === lowestScore && total > 0) {
+          lowestSubjects.push(subject.name);
+        }
+      });
+
+      if (subjects.length === 0 || lowestScore === Infinity) {
+        return 'Encouraging effort shown. Continue working diligently in all subjects.';
+      }
+
+      if (lowestScore >= 70) {
+        return 'Well done, Strong performance across all subjects. Excellent work!';
+      }
+
+      if (lowestSubjects.length === 1) {
+        return `Good overall performance, but more effort is needed in <b style="color: red;">${lowestSubjects[0]}.</b>`;
+      } else if (lowestSubjects.length === 2) {
+        return `Positive results, More effort needed in <b style="color: red;">${lowestSubjects[0]}</b> and <b style="color: red;">${lowestSubjects[1]}.</b>`;
+      } else {
+        return `Promising results, but effort is needed in <b style="color: red;">${lowestSubjects.slice(0, -1).join(', ')}</b> and <b style="color: red;">${lowestSubjects.slice(-1)[0]}.</b>`;
+      }
+    }
+
+    // Navigation
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+
+      document.querySelectorAll('nav button[data-page]').forEach(button => {
+        button.classList.remove('active');
+      });
+      const activeButton = document.querySelector(`nav button[data-page="${pageId}"]`);
+      if (activeButton) {
+        activeButton.classList.add('active');
+      }
+
+      if (pageId === 'students') {
+        loadStudents();
+        document.getElementById('searchStudent').value = '';
+        toggleSubjectSelection();
+      }
+      if (pageId === 'settings') {
+        loadSubjects();
+        loadGrades();
+      }
+      if (pageId === 'performance') {
+        loadPerformance();
+        document.getElementById('searchPerfStudent').value = '';
+      }
+      if (pageId === 'marks') {
+        updateSubjectDropdown();
+        document.getElementById('searchMarksStudent').value = '';
+      }
+      if (pageId === 'reports') {
+        updateReportStudentDropdown();
+        document.getElementById('searchReportStudent').value = '';
+      }
+      if (pageId === 'dashboard') {
+        loadStats();
+      }
+      const title = document.getElementById('dashboardTitle');
+      title.classList.add('zoom');
+      title.addEventListener('animationend', ()=> {
+        title.classList.remove('zoom');
+      }, {once:true});
+    }
+
+    // Dashboard Stats
+    function loadStats() {
+      const statsDiv = document.getElementById('stats');
+      const classCounts = data.students.reduce((acc, s) => {
+        acc[s.class] = (acc[s.class] || 0) + 1;
+        return acc;
+      }, {});
+      const subjectCounts = Object.fromEntries(
+        Object.entries(data.subjects).map(([c, s]) => [c, s.length])
+      );
+
+      let studentsHtml = '<ul>';
+      Object.entries(classCounts).forEach(([cls, count]) => {
+        studentsHtml += `<li><strong>${cls}:</strong> ${count} student${count !== 1 ? 's' : ''}</li>`;
+      });
+      studentsHtml += '</ul>';
+
+      let subjectsHtml = '<ul>';
+      Object.entries(subjectCounts).forEach(([cls, count]) => {
+        subjectsHtml += `<li><strong>${cls}:</strong> ${count} subject${count !== 1 ? 's' : ''}</li>`;
+      });
+      subjectsHtml += '</ul>';
+
+      statsDiv.innerHTML = `
+        <div class="stats-container">
+          <div class="stats-card students">
+            <h3>STUDENT'S PER CLASS</h3>
+            ${studentsHtml}
+          </div>
+          <div class="stats-card subjects">
+            <h3>SUBJECT'S PER CLASS</h3>
+            ${subjectsHtml}
+          </div>
+        </div>`;
+    }
+
+    // Student Management
+    function toggleSubjectSelection() {
+      const cls = document.getElementById('studentClass').value;
+      const subjectSelection = document.getElementById('subjectSelection');
+      if (cls === 'S.1') {
+        subjectSelection.style.display = 'none';
+        return;
+      }
+      subjectSelection.style.display = 'block';
+      const subjectCheckboxes = document.getElementById('subjectCheckboxes');
+      subjectCheckboxes.innerHTML = '';
+      compulsorySubjects.forEach(subjectName => {
+        const div = document.createElement('div');
+        div.innerHTML = `<label><input type="checkbox" name="subjects" value="${subjectName}" checked disabled>${subjectName}</label>`;
+        subjectCheckboxes.appendChild(div);
+      });
+      const optionalSubjects = data.subjects[cls].filter(s => !compulsorySubjects.includes(s.name));
+      optionalSubjects.forEach(subject => {
+        const div = document.createElement('div');
+        div.innerHTML = `<label><input type="checkbox" name="subjects" value="${subject.name}">${subject.name}</label>`;
+        subjectCheckboxes.appendChild(div);
+      });
+    }
+
+    function showFloatingError(message, isSuccess = false, targetErrorEl = null) {
+      const errorEl = targetErrorEl || document.getElementById('marksError');
+      errorEl.innerHTML = `${message} <span class="close-toast" onclick="this.parentElement.classList.remove('show')">&times;</span>`;
+      errorEl.classList.remove('show', 'success');
+      if (isSuccess) {
+        errorEl.classList.add('success');
+      }
+      errorEl.classList.add('show');
+      setTimeout(() => {
+        errorEl.classList.remove('show');
+      }, 7000);
+      errorEl.onclick = (e) => {
+        if (e.target.classList.contains('close-toast')) return;
+        errorEl.classList.remove('show');
+      };
+    }
+
+    function addStudent() {
+      const name = document.getElementById('studentName').value.trim();
+      const cls = document.getElementById('studentClass').value;
+      const house = document.getElementById('studentHouse').value.trim();
+      const error = document.getElementById('studentError');
+
+      if (!name || !house ) {
+        showFloatingError('Please fill all fields', false, error);
+        return;
+      }
+      if (data.students.some(s => s.name === name && s.class === cls)) {
+        showFloatingError('Student already exists in this class', false, error);
+        return;
+      }
+      const student = { id: `${cls.replace('.', '')}_${data.students.length + 1}`, name, class: cls, house };
+      if (cls !== 'S.1') {
+        const optionalChecked = Array.from(document.querySelectorAll('#subjectCheckboxes input:not([disabled]):checked'));
+        const selectedOptionals = optionalChecked.map(cb => cb.value);
+        if (selectedOptionals.length !== 2) {
+          showFloatingError(`Please select exactly 2 optional subjects for ${cls}`, false, error);
+          return;
+        }
+        student.subjects = [...compulsorySubjects, ...selectedOptionals];
+      }
+      data.students.push(student);
+      saveDataToFirestore();
+      loadStudents();
+      showFloatingError('Student added successfully!', true, error);
+      document.getElementById('studentName').value = '';
+      document.getElementById('studentHouse').value = '';
+      document.getElementById('subjectCheckboxes').innerHTML = '';
+      document.getElementById('subjectSelection').style.display = 'none';
+    }
+
+    // Edit student name functionality
+    let currentEditingStudentId = null;
+
+    function editStudent(id) {
+      const student = data.students.find(s => s.id === id);
+      if (!student) return;
+
+      currentEditingStudentId = id;
+      document.getElementById('currentStudentNameDisplay').textContent = student.name.toUpperCase();
+      document.getElementById('editStudentNewName').value = student.name;
+      document.getElementById('editStudentNewHouse').value = student.house;
+      document.getElementById('editStudentModal').style.display = 'block';
+    }
+
+    function closeEditStudentModal() {
+      document.getElementById('editStudentModal').style.display = 'none';
+      currentEditingStudentId = null;
+    }
+
+    function saveEditedStudent() {
+      if (!currentEditingStudentId) return;
+
+      const newName = document.getElementById('editStudentNewName').value.trim();
+      const newHouse = document.getElementById('editStudentNewHouse').value.trim();
+      const error = document.getElementById('studentError');
+
+      if (!newName) {
+        showFloatingError('Student name cannot be empty', false, error);
+        return;
+      }
+
+      const student = data.students.find(s => s.id === currentEditingStudentId);
+      if (student) {
+        if (data.students.some(s => s.id !== currentEditingStudentId && s.name === newName && s.class === student.class)) {
+          showFloatingError('Another student with this name already exists in the same class', false, error);
+          return;
+        }
+
+        student.name = newName;
+        if (newHouse) student.house = newHouse;
+
+        saveDataToFirestore();
+        loadStudents();
+        showFloatingError('Student details updated successfully!', true, error);
+        closeEditStudentModal();
+      }
+    }
+
+    function loadStudents() {
+  const tbody = document.querySelector('#studentTable tbody');
+  const filterClass = document.getElementById('filterClass').value;
+  const filterHouse = document.getElementById('filterHouse').value;
+  const searchQuery = document.getElementById('searchStudent').value.trim().toLowerCase();
+
+  // Populate House filter dropdown with unique houses from students
+  const uniqueHouses = [...new Set(data.students.map(s => s.house.trim().toUpperCase()))].sort();
+  const houseSelect = document.getElementById('filterHouse');
+  houseSelect.innerHTML = '<option value="">All Houses</option>';
+  uniqueHouses.forEach(house => {
+    const option = document.createElement('option');
+    option.value = house;
+    option.textContent = house;
+    houseSelect.appendChild(option);
+  });
+
+  // Keep previously selected house if still valid
+  if (filterHouse && uniqueHouses.includes(filterHouse)) {
+    houseSelect.value = filterHouse;
+  }
+
+  // Start filtering
+  let filteredStudents = data.students;
+
+  if (filterClass) {
+    filteredStudents = filteredStudents.filter(s => s.class === filterClass);
+  }
+
+  if (filterHouse) {
+    filteredStudents = filteredStudents.filter(s => s.house.trim().toUpperCase() === filterHouse);
+  }
+
+  if (searchQuery) {
+    filteredStudents = filteredStudents.filter(s => s.name.toLowerCase().includes(searchQuery));
+  }
+
+  // Sort by name
+  filteredStudents.sort((a, b) => a.name.localeCompare(b.name));
+
+  // Clear and rebuild table
+  tbody.innerHTML = '';
+  filteredStudents.forEach(student => {
+    const onclickAttr = (student.class !== 'S.1') ? `onclick="showStudentSubjects('${student.id}')" style="cursor: pointer;"` : '';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td ${onclickAttr}>${student.name.toUpperCase()}</td>
+      <td>${student.class}</td>
+      <td>${student.house.toUpperCase()}</td>
+      <td>
+        <button onclick="event.stopPropagation(); editStudent('${student.id}')">Edit</button>
+        <button onclick="event.stopPropagation(); deleteStudent('${student.id}')" style="background-color:#e74c3c;">Delete</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+    function showStudentSubjects(studentId) {
+        const student = data.students.find(s => s.id === studentId);
+        const nameEl = document.getElementById('modalStudentName');
+        const listEl = document.getElementById('modalSubjectList');
+        nameEl.textContent = student ? student.name : 'Unknown Student';
+        if (student && (student.class === 'S.2' || student.class === 'S.3' || student.class === 'S.4') && student.subjects && student.subjects.length > 0) {
+            listEl.innerHTML = student.subjects.map(subject => `<li>${subject}</li>`).join('');
+        } else {
+            listEl.innerHTML = '<li>No subjects selected or not applicable for this student.</li>';
+        }
+        document.getElementById('subjectModal').style.display = 'block';
+    }
+
+    function closeSubjectModal() {
+        document.getElementById('subjectModal').style.display = 'none';
+    }
+
+    function deleteStudent(id) {
+      if (confirm('Delete this student? All associated marks will also be deleted.')) {
+        data.students = data.students.filter(s => s.id !== id);
+        data.marks = data.marks.filter(m => m.studentId !== id);
+        saveDataToFirestore();
+        loadStudents();
+      }
+    }
+
+    // Marks Entry 
+    function updateSubjectDropdown() {
+      const cls = document.getElementById('marksClass').value;
+      const subjectSelect = document.getElementById('marksSubject');
+      subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+      if (cls && data.subjects[cls]) {
+        data.subjects[cls].forEach(subject => {
+          const option = document.createElement('option');
+          option.value = subject.name;
+          option.textContent = subject.name;
+          subjectSelect.appendChild(option);
+        });
+      }
+      document.querySelector('#marksTable tbody').innerHTML = '';
+    }
+
+    let marksLocked = true;
+
+    function loadMarksEntry() {
+      const cls = document.getElementById('marksClass').value;
+      const subject = document.getElementById('marksSubject').value;
+      const searchQuery = document.getElementById('searchMarksStudent').value.trim().toLowerCase();
+      const error = document.getElementById('marksError');
+      const tbody = document.querySelector('#marksTable tbody');
+
+      if (!cls || !subject) {
+        showFloatingError('Please select class and subject', false, error);
+        return;
+      }
+
+      tbody.innerHTML = '';
+      let students = data.students.filter(s => s.class === cls && (cls === 'S.2' || cls === 'S.3' || cls === 'S.4' ? s.subjects.includes(subject) : true));
+      if (searchQuery) {
+        students = students.filter(s => s.name.toLowerCase().includes(searchQuery));
+      }
+      students.sort((a, b) => a.name.localeCompare(b.name));
+              students.forEach(student => {
+        const mark = data.marks.find(m => m.studentId === student.id && m.subject === subject) || {};
+        const midtermVal = mark.midterm != null ? mark.midterm : '';
+        const endVal = mark.end != null ? mark.end : '';
+        const tr = document.createElement('tr');
+
+        const disabledAttr = marksLocked ? 'disabled' : '';
+
+        // Remove any previous onclick to avoid duplicates
+        tr.onclick = null;
+        tr.style.cursor = "default";
+        tr.title = "";
+
+        // ONLY when marks are LOCKED: make row clickable to unlock
+        if (marksLocked) {
+          tr.style.cursor = "pointer";
+          tr.title = "Marks are locked. Click row to unlock for editing";
+          tr.onclick = function(e) {
+            // Prevent event bubbling if clicking on input (though disabled, safe)
+            if (e.target.tagName === 'INPUT') return;
+            showPasswordModal();
+          };
+        }
+        // When unlocked: ensure no row click interferes
+        else {
+          tr.onclick = null; // Explicitly clear
+        }
+
+        tr.innerHTML = `<td>${student.name.toUpperCase()}</td>
+                        <td><input type="number" data-id="${student.id}" data-field="midterm" value="${midtermVal}" min="0" max="20" ${disabledAttr}></td>
+                        <td><input type="number" data-id="${student.id}" data-field="end" value="${endVal}" min="0" max="80" ${disabledAttr}></td>`;
+        tbody.appendChild(tr);
+      });
+      updateLockButton();
+      updateClearMarksButton();
+    }
+
+    function toggleLock() {
+      if (marksLocked) {
+        showPasswordModal();
+      } else {
+        marksLocked = true;
+        disableMarksInputs();
+        updateLockButton();
+        updateClearMarksButton();
+      }
+    }
+
+    function showPasswordModal() {
+      document.getElementById("passwordModal").style.display = "block";
+    }
+
+    function closePasswordModal() {
+      document.getElementById("passwordModal").style.display = "none";
+      document.getElementById("unlockPassword").value = "";
+    }
+
+    function unlockMarks() {
+      const passwordInput = document.getElementById("unlockPassword").value;
+      if (passwordInput === correctPassword) {
+        marksLocked = false;
+        enableMarksInputs();
+        updateLockButton();
+        updateClearMarksButton();
+        showFloatingError("Marks unlocked for editing.", true);
+        closePasswordModal();
+        loadMarksEntry();
+      } else {
+        showFloatingError("Incorrect password. Please try again.", false, document.getElementById("modalError"));
+      }
+    }
+
+    function disableMarksInputs() {
+      const inputs = document.querySelectorAll("#marksTable input");
+      inputs.forEach(input => {
+        input.disabled = true;
+      });
+    }
+
+    function enableMarksInputs() {
+      const inputs = document.querySelectorAll("#marksTable input");
+      inputs.forEach(input => {
+        input.disabled = false;
+      });
+    }
+
+    function updateLockButton() {
+      const lockButton = document.getElementById("lockButton");
+      lockButton.textContent = marksLocked ? "Unlock Marks" : "Lock Marks";
+      lockButton.style.backgroundColor = marksLocked ? "#e74c3c" : "rgb(24, 204, 24)";
+    }
+
+  function clearAllMarksInCurrentSubject() {
+  const cls = document.getElementById('marksClass').value;
+  const subject = document.getElementById('marksSubject').value;
+  const error = document.getElementById('marksError');
+
+  // Check if class and subject are selected
+  if (!cls || !subject) {
+    showFloatingError("Please select a class and subject first.", false, error);
+    return;
+  }
+
+  // Block if marks are locked
+  if (marksLocked) {
+    showFloatingError("Cannot clear marks: Marks are currently LOCKED. Unlock first to clear.", false, error);
+    return;
+  }
+
+  // Confirmation dialog
+  if (confirm(`Are you sure you want to clear ALL marks for "${subject}" in ${cls}? This action cannot be undone.`)) {
+    // Clear the marks for this subject and class
+    data.marks = data.marks.filter(m => !(m.class === cls && m.subject === subject));
+    saveDataToFirestore();
+    loadMarksEntry(); // Refresh the table
+
+    // Success message with subject name
+    showFloatingError(`All marks for "${subject}" have been successfully cleared.`, true, error);
+  }
+ }
+        // Update Clear All Marks button behavior based on lock state
+    function updateClearMarksButton() {
+    const clearButton = document.getElementById("clearMarksButton");
+    
+    if (marksLocked) {
+        // When locked: click → open unlock modal
+        clearButton.onclick = function() {
+        showFloatingError("Marks are locked. Unlock first to clear marks.", false, document.getElementById('marksError'));
+        showPasswordModal();  // Triggers the unlock modal
+        };
+        clearButton.style.opacity = "0.7";  // Optional: visually indicate it's restricted
+        clearButton.title = "Unlock marks first to enable clearing";
+    } else {
+        // When unlocked: click → normal clear function
+        clearButton.onclick = function() {
+        clearAllMarksInCurrentSubject();
+        };
+        clearButton.style.opacity = "1";
+        clearButton.title = "Clear all marks for the current subject";
+    }
+    }
+
+    function showChangePasswordModal() {
+      document.getElementById("changePasswordModal").style.display = "block";
+    }
+
+    function closeChangePasswordModal() {
+      document.getElementById("changePasswordModal").style.display = "none";
+      document.getElementById("currentPassword").value = "";
+      document.getElementById("newPassword").value = "";
+      document.getElementById("confirmPassword").value = "";
+    }
+
+    function changeMarksPassword() {
+      const current = document.getElementById("currentPassword").value;
+      const newPwd = document.getElementById("newPassword").value;
+      const confirm = document.getElementById("confirmPassword").value;
+      if (current !== correctPassword) {
+        showFloatingError("Current password is incorrect.", false);
+        return;
+      }
+      if (newPwd !== confirm) {
+        showFloatingError("New passwords do not match.", false);
+        return;
+      }
+      if (newPwd.length < 4) {
+        showFloatingError("New password must be at least 4 characters.", false);
+        return;
+      }
+      correctPassword = newPwd;
+      data.lockPassword = newPwd;
+      saveDataToFirestore();
+      showFloatingError("Password changed successfully!", true);
+      closeChangePasswordModal();
+    }
+
+    function saveMarks() {
+      if (marksLocked) {
+        showFloatingError("Marks are locked. Please unlock to save changes.");
+        return;
+      }
+      const cls = document.getElementById('marksClass').value;
+      const subject = document.getElementById('marksSubject').value;
+      const error = document.getElementById('marksError');
+      const inputs = document.querySelectorAll('#marksTable input');
+      const rows = document.querySelectorAll('#marksTable tbody tr');
+
+      rows.forEach(row => row.classList.remove('highlight-error'));
+      error.classList.remove('show');
+
+      if (!cls || !subject) {
+        showFloatingError('Please select class and subject', false, error);
+        return;
+      }
+
+      let valid = true;
+      const invalidRows = [];
+      inputs.forEach(input => {
+        const rawValue = input.value.trim();
+        const value = rawValue === '' ? null : parseFloat(rawValue);
+        const field = input.dataset.field;
+        const studentId = input.dataset.id;
+
+        if ((rawValue !== '' && (isNaN(value) || value < 0 || 
+            (field === 'midterm' && value > 20) || 
+            (field === 'end' && value > 80)))) {
+          valid = false;
+          invalidRows.push(studentId);
+        }
+      });
+
+      if (!valid) {
+        rows.forEach(row => {
+          const studentId = row.querySelector('input').dataset.id;
+          if (invalidRows.includes(studentId)) {
+            row.classList.add('highlight-error');
+          }
+        });
+        const firstInvalidRow = document.querySelector('#marksTable tbody tr.highlight-error');
+        const scrollTarget = firstInvalidRow || document.getElementById('marksTable');
+        scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showFloatingError('Invalid marks (Midterm: 0-20, End: 0-80). Scroll to highlights below.', false, error);
+        return;
+      }
+
+      inputs.forEach(input => {
+        const studentId = input.dataset.id;
+        const field = input.dataset.field;
+        const value = input.value.trim() === '' ? null : parseFloat(input.value);
+        let mark = data.marks.find(m => m.studentId === studentId && m.subject === subject);
+        if (!mark) {
+          mark = { studentId, subject, class: cls, midterm: null, end: null };
+          data.marks.push(mark);
+        }
+        mark[field] = value;
+      });
+
+      saveDataToFirestore();
+      marksLocked = true;
+      disableMarksInputs();
+      updateLockButton();
+      updateClearMarksButton();
+      showFloatingError('Marks Successfully saved and locked', true, error);
+      rows.forEach(row => row.classList.add('highlight-success'));
+      setTimeout(() => {
+        rows.forEach(row => row.classList.remove('highlight-success'));
+      }, 2000);
+      loadMarksEntry();
+    }
+
+    // Performance Overview (kept exactly as original)
+    function getStudentPerformance(student, cls) {
+      let subjects = data.subjects[cls] || [];
+      if (cls === 'S.2' || cls === 'S.3' || cls === 'S.4') {
+        subjects = subjects.filter(s => student.subjects.includes(s.name));
+      }
+      let totalSum = 0;
+      let numSubjects = subjects.length;
+      let numAs = 0;
+      let numEs = 0;
+      subjects.forEach(sub => {
+        const mark = data.marks.find(m => m.studentId === student.id && m.subject === sub.name) || { midterm: 0, end: 0 };
+        const total = (mark.midterm || 0) + (mark.end || 0);
+        totalSum += total;
+        const gradeInfo = getGrade(total);
+        if (gradeInfo.grade === 'A') numAs++;
+        if (gradeInfo.grade === 'E') numEs++;
+      });
+      const avg = numSubjects ? totalSum / numSubjects : 0;
+      return { avg, numAs, numEs, numSubjects };
+    }
+
+    function getSubjectAvg(cls, subjectName) {
+      let relevantStudents = data.students.filter(s => s.class === cls && (cls !== 'S.2' && cls !== 'S.3' && cls !== 'S.4' || s.subjects.includes(subjectName)));
+      let totals = [];
+      let studentCount = 0;
+      relevantStudents.forEach(s => {
+        const mark = data.marks.find(m => m.studentId === s.id && m.subject === subjectName);
+        const total = (mark ? (mark.midterm || 0) + (mark.end || 0) : 0);
+        totals.push(total);
+        studentCount++;
+      });
+      const avg = studentCount ? totals.reduce((a, b) => a + b, 0) / studentCount : 0;
+      return { avg, count: studentCount };
+    }
+
+    function getGrade(total) {
+      for (const grade of data.grading) {
+        if (total >= grade.min && total <= grade.max) {
+          return grade;
+        }
+      }
+      return { grade: 'E', descriptor: 'ELEMENTARY' };
+    }
+
+    function getFullDescriptor(descriptor) {
+      const mappings = {
+        'EXCEPTIONAL' : '<p style="font-size: 7.8pt"> Applies innovatory and creativity of the acquired knowledge and skills.</p>',
+        'OUTSTANDING' : '<p style="font-size: 7.8pt"> Applies high level of acquired knowledge & skills in life situations.</p>',
+        'SATISFACTORY' : '<p style="font-size: 7.8pt">Applies adequate level of acquired knowledge and skills in real life </p>',
+        'BASIC' : '<p style="font-size: 7.8pt"> Demonstrates minimum level of acquired knowledge & skills in life</p>' ,
+        'ELEMENTARY': '<p style="font-size: 7.8pt"> Demonstrates basic level of acquired knowledge and skills in real life.</p>'
+      };
+      return mappings[descriptor] || '';
+    }
+
+    function loadOverallTable(cls, searchQuery) {
+      const tbody = document.querySelector('#perfTable tbody');
+      const thead = document.querySelector('#perfTable thead');
+      tbody.innerHTML = '';
+      let header = '<tr><th><b>NAME</th>';
+      let subjects = data.subjects[cls] || [];
+      subjects.forEach(subject => {
+        header += `<th><b>${subject.name}</th>`;
+      });
+      header += '<th><b>Overall Avg</th>';
+      thead.innerHTML = header;
+
+      let students = data.students.filter(s => s.class === cls);
+      if (searchQuery) {
+        students = students.filter(s => s.name.toLowerCase().includes(searchQuery));
+      }
+      students.sort((a, b) => a.name.localeCompare(b.name));
+      students.forEach(student => {
+        let subjectsToShow = subjects;
+        if (cls === 'S.2' || cls === 'S.3' || cls === 'S.4') {
+          subjectsToShow = subjects.filter(subject => student.subjects.includes(subject.name));
+        }
+        let row = `<td style="font-size: 8pt"><b>${student.name.toUpperCase()}</td>`;
+        let totalSum = 0;
+        subjectsToShow.forEach(subject => {
+          const mark = data.marks.find(m => m.studentId === student.id && m.subject === subject.name) || { midterm: 0, end: 0 };
+          const total = (mark.midterm || 0) + (mark.end || 0);
+          totalSum += total;
+          row += `<td>${total}</td>`;
+        });
+        const avg = subjectsToShow.length ? totalSum / subjectsToShow.length : 0;
+        row += `<td>${avg.toFixed(1)}</td>`;
+        const tr = document.createElement('tr');
+        tr.innerHTML = row;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function loadGiants(cls, searchQuery) {
+      const tbody = document.querySelector('#perfTable tbody');
+      const thead = document.querySelector('#perfTable thead');
+      tbody.innerHTML = '';
+      thead.innerHTML = '<tr><th>Rank</th><th>Name</th><th>Avg</th><th>Num A\'s</th></tr>';
+
+      let students = data.students.filter(s => s.class === cls);
+      if (searchQuery) {
+        students = students.filter(s => s.name.toLowerCase().includes(searchQuery));
+      }
+      students = students.map(s => ({ ...s, perf: getStudentPerformance(s, cls) })).sort((a, b) => {
+        if (a.perf.avg !== b.perf.avg) return b.perf.avg - a.perf.avg;
+        return b.perf.numAs - a.perf.numAs;
+      }).slice(0, 10);
+
+      students.forEach((student, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${index + 1}</td><td><b>${student.name.toUpperCase()}</td><td>${student.perf.avg.toFixed(1)}</td><td>${student.perf.numAs}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function loadDwarfs(cls, searchQuery) {
+      const tbody = document.querySelector('#perfTable tbody');
+      const thead = document.querySelector('#perfTable thead');
+      tbody.innerHTML = '';
+      thead.innerHTML = '<tr><th>Rank</th><th>Name</th><th>Avg</th><th>Num E\'s</th></tr>';
+
+      let students = data.students.filter(s => s.class === cls);
+      if (searchQuery) {
+        students = students.filter(s => s.name.toLowerCase().includes(searchQuery));
+      }
+      students = students.map(s => ({ ...s, perf: getStudentPerformance(s, cls) })).sort((a, b) => {
+        if (a.perf.avg !== b.perf.avg) return a.perf.avg - b.perf.avg;
+        return b.perf.numEs - a.perf.numEs;
+      }).slice(0, 10);
+
+      students.forEach((student, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${index + 1}</td><td><b>${student.name.toUpperCase()}</td><td>${student.perf.avg.toFixed(1)}</td><td>${student.perf.numEs}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function loadBestSubjects(cls) {
+      const tbody = document.querySelector('#perfTable tbody');
+      const thead = document.querySelector('#perfTable thead');
+      tbody.innerHTML = '';
+      thead.innerHTML = '<tr><th>Subject</th><th>Avg Score</th><th>Students</th></tr>';
+
+      let subjects = data.subjects[cls] || [];
+      let subjectAvgs = subjects.map(sub => ({ ...sub, ...getSubjectAvg(cls, sub.name) })).sort((a, b) => b.avg - a.avg);
+
+      subjectAvgs.forEach(subject => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><b>${subject.name}</td><td>${subject.avg.toFixed(1)}</td><td>${subject.count}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function loadWorstSubjects(cls) {
+      const tbody = document.querySelector('#perfTable tbody');
+      const thead = document.querySelector('#perfTable thead');
+      tbody.innerHTML = '';
+      thead.innerHTML = '<tr><th>Subject</th><th>Avg Score</th><th>Students</th></tr>';
+
+      let subjects = data.subjects[cls] || [];
+      let subjectAvgs = subjects.map(sub => ({ ...sub, ...getSubjectAvg(cls, sub.name) })).sort((a, b) => a.avg - b.avg);
+
+      subjectAvgs.forEach(subject => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><b>${subject.name}</td><td>${subject.avg.toFixed(1)}</td><td>${subject.count}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function loadPerformance() {
+      const cls = document.getElementById('perfClass').value;
+      const view = document.getElementById('perfView').value;
+      const searchQuery = document.getElementById('searchPerfStudent').value.trim().toLowerCase();
+      const tbody = document.querySelector('#perfTable tbody');
+      const thead = document.querySelector('#perfTable thead');
+      tbody.innerHTML = '';
+      thead.innerHTML = '';
+
+      if (!cls) return;
+
+      if (view === 'table') {
+        loadOverallTable(cls, searchQuery);
+      } else if (view === 'giants') {
+        loadGiants(cls, searchQuery);
+      } else if (view === 'dwarfs') {
+        loadDwarfs(cls, searchQuery);
+      } else if (view === 'best-subjects') {
+        loadBestSubjects(cls);
+      } else if (view === 'worst-subjects') {
+        loadWorstSubjects(cls);
+      }
+    }
+
+    // Report Generation
+    function updateReportStudentDropdown() {
+      const cls = document.getElementById('reportClass').value;
+      const searchQuery = document.getElementById('searchReportStudent').value.trim().toLowerCase();
+      const studentSelect = document.getElementById('reportStudent');
+      studentSelect.innerHTML = '<option value="">Select S.1 Student</option>';
+      if (cls) {
+        let students = data.students.filter(s => s.class === cls);
+        if (searchQuery) {
+          students = students.filter(s => s.name.toLowerCase().includes(searchQuery));
+        }
+        students.forEach(student => {
+          const option = document.createElement('option');
+          option.value = student.id;
+          option.textContent = student.name.toUpperCase();
+          studentSelect.appendChild(option);
+        });
+      }
+    }
+
+    function updateReportStudentDropdown2() {
+      const cls = document.getElementById('reportClass2').value;
+      const searchQuery = document.getElementById('searchReportStudent2').value.trim().toLowerCase();
+      const studentSelect = document.getElementById('reportStudent2');
+      studentSelect.innerHTML = '<option value="">Select S.2 / S.3 / S.4 Student</option>';
+      if (cls) {
+        let students = data.students.filter(s => s.class === cls);
+        if (searchQuery) {
+          students = students.filter(s => s.name.toLowerCase().includes(searchQuery));
+        }
+        students.forEach(student => {
+          const option = document.createElement('option');
+          option.value = student.id;
+          option.textContent = student.name.toUpperCase();
+          studentSelect.appendChild(option);
+        });
+      }
+    }
+
+    function getReportYear() {
+      return document.getElementById('reportYearInput').value.trim() || '2026';
+    }
+
+    function printAllReports() {
+      const cls = document.getElementById('reportClass').value;
+      if (!cls) {
+        showFloatingError('Please select class', false, document.getElementById('reportError'));
+        return;
+      }
+      const year = getReportYear();
+      const students = data.students.filter(s => s.class === cls);
+      let reports = '';
+      students.forEach(student => {
+        let subjects = data.subjects[cls] || [];
+        if (cls === 'S.2' || cls === 'S.3' || cls === 'S.4') {
+          subjects = subjects.filter(subject => student.subjects.includes(subject.name));
+        }
+        let table = '<table class="report-table"><tr><th>SUBJECT</th><th>MID(20%)</th><th>END(80%)</th><th>TOTAL(100%)</th><th>OUT OF 3</th><th>GRADE</th><th>DESCRIPTOR</th><th>TR</th></tr>';
+        let totalSum = 0;
+        let validSubjectCount = 0;
+        let descriptorCounts = {};
+        subjects.forEach(subject => {
+          const mark = data.marks.find(m => m.studentId === student.id && m.subject === subject.name);
+          const midterm = mark && mark.midterm != null ? mark.midterm : '-';
+          const end = mark && mark.end != null ? mark.end : '-';
+
+          let displayTotal = '-', displayOutOf3 = '-', displayGrade = '-', displayDescriptor = '-';
+
+          if (hasAnyMark(mark)) {
+            const total = (mark.midterm || 0) + (mark.end || 0);
+            displayTotal = total.toFixed(1);
+            const gradeInfo = getGrade(total);
+            displayGrade = gradeInfo.grade;
+            displayDescriptor = gradeInfo.descriptor;
+            displayOutOf3 = (total / 33.33).toFixed(1);
+
+            totalSum += total;
+            validSubjectCount++;
+            descriptorCounts[gradeInfo.descriptor] = (descriptorCounts[gradeInfo.descriptor] || 0) + 1;
+          }
+
+          table += `<tr><td>${subject.name}</td><td>${midterm}</td><td style="color:green;">${end}</td><td>${displayTotal}</td><td style="color:red;">${displayOutOf3}</td><td>${displayGrade}</td><td style="color:blue;">${displayDescriptor}</td><td>${subject.teacher || 'N/A'}</td></tr>`;
+        });
+        table += '</table>';
+
+        let gradingTable = '<table class="grading-table"><thead><tr><th>GRADE</th><th>ACHIEVEMENT LEVEL</th><th>DESCRIPTOR</th></tr></thead><tbody>';
+        data.grading.forEach(g => {
+          gradingTable += `<tr><td>${g.grade}</td><td>${g.descriptor}</td><td>${getFullDescriptor(g.descriptor)}</td></tr>`;
+        });
+        gradingTable += '</tbody></table>';
+
+        const avg = validSubjectCount ? (totalSum / validSubjectCount).toFixed(1) : '-';
+        const avgOutOf3 = validSubjectCount ? (avg / 33.33).toFixed(1) : '-';
+        const mostFrequentDescriptor = validSubjectCount ? Object.keys(descriptorCounts).reduce((a, b) => descriptorCounts[a] > descriptorCounts[b] ? a : b) : '-';
+        const result = validSubjectCount ? (avgOutOf3 >= 1.5 ? 'RESULT 1' : avgOutOf3 >= 1 ? 'RESULT 2' : 'RESULT 3') : '-';
+
+        const headTeacherComment = validSubjectCount ? generateHeadTeacherComment(mostFrequentDescriptor) : 'No marks entered yet.';
+        const classTeacherComment = generateClassTeacherComment(student, cls, subjects);
+
+        reports += `
+          <div class="report">
+            <div class="report-header">
+              <img src = "badge.png" class="report-badge" alt="School Badge" style="width: 100px; display: block; margin: 0 auto;" width="200" height="70">
+              <h2><span style="font-size:1.5em; line-height: 0.0; ">MUKONO COMPREHENSIVE S.S - KAYUNGA</span></h2>
+              <p style="font-size:10pt; color: black; word-spacing: 7px; font-weight: bold;">P.O.BOX 21267, KAMPALA │ mukonocompresive@gmail.com │ Tell; +256 775-877-224 / +256 775-060-094</p>
+              <h3><p style="line-height: 1.0; font-size:0.8em; text-align: center; word-spacing: 10px; background-color: #1e3a8a; color: white;">END OF TERM LEARNER'S SUMMATIVE REPORT ${year}</p></h3>
+              <h4></h4>
+              <h5>NAME: <span style="border: 1px solid black; padding: 0 2px; display: inline-block; white-space: nowrap; color:#1e3a8a;">${student.name.toUpperCase()}</span> &nbsp;&nbsp;&nbsp;CLASS: <span style="border: 1px solid black; padding: 0 2px; display: inline-block; white-space: nowrap; color:#1e3a8a;">${student.class}</span>  &nbsp;&nbsp;&nbsp;&nbsp;HOUSE: <span style="border: 1px solid black; padding: 0 2px; display: inline-block; white-space: nowrap; color:#1e3a8a;">${student.house.toUpperCase()}</span></h5>
+            </div>
+            <h2 style="color: black; font-family: Georgia, 'Times New Roman', Times, serif; font-size:1.5em; word-spacing: 10px;"><u>ASSESSMENT SCORE'S SUMMARY</u></h2>
+            <b>${table}
+            <br><p style="text-align: left; background-color: black; font-size: 13.5px;"><strong style="font-family: Times New Roman, Times, serif; color:white">OVERALL AVERAGE:</strong> <u style="color: rgb(228, 174, 74);"><b>${avgOutOf3}</u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="text-align: left"><strong style="font-family: Times New Roman, Times, serif; color: white">OVERALL PERFORMANCE:</strong> <u style="color: rgb(228, 174, 74);"><b>${mostFrequentDescriptor}</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="text-align: left"><strong style="font-family: Times New Roman, Times, serif; color: white"> RESULT - CATEGORY:</strong> <u style="color: rgb(228, 174, 74);"><b>${result}</u></p>
+            <h2 style="color: black; font-family: Times New Roman, Times, serif; font-size:1.5em; word-spacing: 10px;"><u>GRADING SYSTEM</u></h2>
+            ${gradingTable}
+            <div class="comment-placeholder">
+              <strong style="font-family: Times New Roman, Times, serif;">Head Teacher's Comment:   <i><b style="color:blue; font-size: 1rem;"><u>${headTeacherComment}</u></i></b> Sign: ................</strong>
+            </div>
+            <div class="comment-placeholder">
+              <strong style="font-family: Times New Roman, Times, serif;">Class Teacher's Comment:  <i><b style="color:blue; font-size: 1rem;"><u>${classTeacherComment}</u></i></b> Sign: ................</strong>
+            </div>
+            <p style="border-bottom: 2px solid #8B0000;"></p>
+            <p style="border-bottom: 5px solid #8B0000; padding-bottom: 3px;"></p>
+            <p style="border-bottom: 2px solid #8B0000; padding-bottom: 4px;"></p>
+            <p style="color: black; font-size: 9pt; text-align: left;"><i> Next Term Begins On: .................................. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NOT VALID WITHOUT STAMP</i></p>
+            <br><p style="color: black; font-size: 9pt; text-align: left;"><i> Fees Balance: ............................................</i></p>
+            <p style="color: blue; font-size: 9pt; text-align:center;"><i>Knowledge Is Power</i></p>
+          </div>`;
+      });
+      document.getElementById('reportPreview').innerHTML = reports;
+      window.print();
+    }
+
+    function printAllReport() {
+      const cls = document.getElementById('reportClass2').value;
+      if (!cls) {
+        showFloatingError('Please select class', false, document.getElementById('reportError'));
+        return;
+      }
+      const year = getReportYear();
+      const students = data.students.filter(s => s.class === cls);
+      let reports = '';
+      students.forEach(student => {
+        let subjects = data.subjects[cls] || [];
+        if (cls === 'S.2' || cls === 'S.3' || cls === 'S.4') {
+          subjects = subjects.filter(subject => student.subjects.includes(subject.name));
+        }
+        let table = '<table class="report-table"><tr><th>SUBJECT</th><th>MID(20%)</th><th>END(80%)</th><th>TOTAL(100%)</th><th>OUT OF 3</th><th>GRADE</th><th>DESCRIPTOR</th><th>TR</th></tr>';
+        let totalSum = 0;
+        let validSubjectCount = 0;
+        let descriptorCounts = {};
+        subjects.forEach(subject => {
+          const mark = data.marks.find(m => m.studentId === student.id && m.subject === subject.name);
+          const midterm = mark && mark.midterm != null ? mark.midterm : '-';
+          const end = mark && mark.end != null ? mark.end : '-';
+
+          let displayTotal = '-', displayOutOf3 = '-', displayGrade = '-', displayDescriptor = '-';
+
+          if (hasAnyMark(mark)) {
+            const total = (mark.midterm || 0) + (mark.end || 0);
+            displayTotal = total.toFixed(1);
+            const gradeInfo = getGrade(total);
+            displayGrade = gradeInfo.grade;
+            displayDescriptor = gradeInfo.descriptor;
+            displayOutOf3 = (total / 33.33).toFixed(1);
+
+            totalSum += total;
+            validSubjectCount++;
+            descriptorCounts[gradeInfo.descriptor] = (descriptorCounts[gradeInfo.descriptor] || 0) + 1;
+          }
+
+          table += `<tr><td>${subject.name}</td><td>${midterm}</td><td style="color:green;">${end}</td><td>${displayTotal}</td><td style="color:red;">${displayOutOf3}</td><td>${displayGrade}</td><td style="color:blue;">${displayDescriptor}</td><td>${subject.teacher || 'N/A'}</td></tr>`;
+        });
+        table += '</table>';
+
+        let gradingTable = '<table class="grading-table"><thead><tr><th>GRADE</th><th>ACHIEVEMENT LEVEL</th><th>DESCRIPTOR</th></tr></thead><tbody>';
+        data.grading.forEach(g => {
+          gradingTable += `<tr><td>${g.grade}</td><td>${g.descriptor}</td><td>${getFullDescriptor(g.descriptor)}</td></tr>`;
+        });
+        gradingTable += '</tbody></table>';
+
+        const avg = validSubjectCount ? (totalSum / validSubjectCount).toFixed(1) : '-';
+        const avgOutOf3 = validSubjectCount ? (avg / 33.33).toFixed(1) : '-';
+        const mostFrequentDescriptor = validSubjectCount ? Object.keys(descriptorCounts).reduce((a, b) => descriptorCounts[a] > descriptorCounts[b] ? a : b) : '-';
+        const result = validSubjectCount ? (avgOutOf3 >= 1.5 ? 'RESULT 1' : avgOutOf3 >= 1 ? 'RESULT 2' : 'RESULT 3') : '-';
+
+        const headTeacherComment = validSubjectCount ? generateHeadTeacherComment(mostFrequentDescriptor) : 'No marks entered yet.';
+        const classTeacherComment = generateClassTeacherComment(student, cls, subjects);
+
+        reports += `
+          <div class="report">
+            <div class="report-header">
+              <img src = "badge.png" class="report-badge" alt="School Badge" style="width: 100px; display: block; margin: 0 auto;" width="200" height="70">
+              <h2><span style="font-size:1.5em; line-height: 0.0; ">MUKONO COMPREHENSIVE S.S - KAYUNGA</span></h2>
+              <p style="font-size:10pt; color: black; word-spacing: 7px; font-weight: bold;">P.O.BOX 21267, KAMPALA │ mukonocompresive@gmail.com │ Tell; +256 775-877-224 / +256 775-060-094</p>
+              <h3><p style="line-height: 1.0; font-size:0.8em; text-align: center; word-spacing: 10px; background-color: #1e3a8a; color: white;">END OF TERM LEARNER'S SUMMATIVE REPORT ${year}</p></h3>
+              <h4></h4>
+              <br><h5>NAME: <span style="border: 1px solid black; padding: 0 2px; display: inline-block; white-space: nowrap; color:#1e3a8a;">${student.name.toUpperCase()}</span> &nbsp;&nbsp;&nbsp;CLASS: <span style="border: 1px solid black; padding: 0 2px; display: inline-block; white-space: nowrap; color:#1e3a8a;">${student.class}</span>  &nbsp;&nbsp;&nbsp;&nbsp;HOUSE: <span style="border: 1px solid black; padding: 0 2px; display: inline-block; white-space: nowrap; color:#1e3a8a;">${student.house.toUpperCase()}</span></h5>
+            </div>
+            <h2 style="color: black; font-family: Times New Roman, Times, serif; font-size:1.8em; word-spacing: 10px;"><u>ASSESSMENT SCORE'S SUMMARY</u></h2>
+            <b>${table}
+            <br><p style="text-align: left; background-color: black; font-size: 13.5px;"><strong style="font-family: Times New Roman, Times, serif; color:white">OVERALL AVERAGE:</strong> <u style="color: rgb(228, 174, 74);"><b>${avgOutOf3}</u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="text-align: left"><strong style="font-family: Times New Roman, Times, serif; color: white">OVERALL PERFORMANCE:</strong> <u style="color: rgb(228, 174, 74);"><b>${mostFrequentDescriptor}</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="text-align: left"><strong style="font-family: Times New Roman, Times, serif; color: white"> RESULT - CATEGORY:</strong> <u style="color: rgb(228, 174, 74);"><b>${result}</u></p>
+            <h2 style="color: black; font-family: Times New Roman, Times, serif; font-size:1.8em; word-spacing: 10px;"><u>GRADING SYSTEM</u></h2>
+            ${gradingTable}
+            <div class="comment-placeholder">
+              <strong style="font-family: Times New Roman, Times, serif;">Head Teacher's Comment:   <i><b style="color:blue; font-size: 1rem;"><u>${headTeacherComment}</u></i></b> Sign: ..............</strong>
+            </div>
+            <div class="comment-placeholder">
+              <strong style="font-family: Times New Roman, Times, serif;">Class Teacher's Comment:  <i><b style="color:blue; font-size: 1rem;"><u>${classTeacherComment}</u></i></b> Sign: ................</strong>
+            </div>
+            <br><p style="border-bottom: 2px solid #8B0000;"></p>
+            <p style="border-bottom: 5px solid #8B0000; padding-bottom: 3px;"></p>
+            <p style="border-bottom: 2px solid #8B0000; padding-bottom: 4px;"></p>
+            <br><p style="color: black; font-size: 9pt; text-align: left;"><i> Next Term Begins On: .................................. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NOT VALID WITHOUT STAMP</i></p>
+            <br><p style="color: black; font-size: 9pt; text-align: left;"><i> Fees Balance: ............................................</i></p>
+            <br><p style="color: blue; font-size: 9pt; text-align:center;"><i>Knowledge Is Power</i></p>
+          </div>`;
+      });
+      document.getElementById('reportPreview').innerHTML = reports;
+      window.print();
+    }
+
+    function printMidtermReports(cls) {
+      if (!cls) return;
+      const year = getReportYear();
+      const students = data.students.filter(s => s.class === cls);
+      let reports = '';
+      students.forEach(student => {
+        let subjects = data.subjects[cls] || [];
+        if (cls === 'S.2' || cls === 'S.3' || cls === 'S.4') {
+          subjects = subjects.filter(subject => student.subjects.includes(subject.name));
+        }
+        let table = '<table class="report-table"><tr><th style="font-size: 15pt;">SUBJECT</th><th style="font-size: 15pt;">MIDTERM MARK (20)</th></tr>';
+        subjects.forEach(subject => {
+          const mark = data.marks.find(m => m.studentId === student.id && m.subject === subject.name);
+          const midterm = mark && mark.midterm != null ? mark.midterm : '-';
+          table += `<tr><td>${subject.name}</td><td style="text-align:center;">${midterm}</td></tr>`;
+        });
+        table += '</table>';
+
+        reports += `
+          <div class="midterm-report">
+            <img src="badge.png" alt="School Badge" style="float:left; width:120px; margin-right:30px;">
+            <h2 style="text-align:center; font-size: 25pt;">MUKONO COMPREHENSIVE S.S - KAYUNGA</h2>
+            <h3 style="text-align:center; background:#1e3a8a; color:white; padding:5px;">MID - TERM RESULT SLIP ${year}</h3>
+            <h4 style="text-align:center; font-size: 17pt;">NAME: <span style="color:blue;">${student.name.toUpperCase()}</span> &nbsp;&nbsp;&nbsp;| CLASS: <span style="color:blue;">${student.class}</span> &nbsp;&nbsp;&nbsp;| HOUSE: <span style="color:blue;">${student.house.toUpperCase()}</span></h4>
+            <b>${table}
+            <div class="comment-placeholder">
+              <strong>Class Teacher's Comment:........................................................................................................................&nbsp;&nbsp;Signature: __________</strong>
+            </div>
+            <br><p style="color: blue; font-size: 12pt; text-align:center;"><i>Knowledge Is Power</i></p>
+          </div>`;
+      });
+      document.getElementById('reportPreview').innerHTML = reports;
+      window.print();
+    }
+
+    // Settings: Subjects
+    function addSubject() {
+      const name = document.getElementById('subjectName').value.trim().toUpperCase();
+      const cls = document.getElementById('subjectClass').value;
+      const teacher = document.getElementById('subjectTeacher').value.trim().toUpperCase();
+      const error = document.getElementById('subjectError');
+
+      if (!name || !teacher) {
+        showFloatingError('Please enter subject name and teacher initials', false, error);
+        return;
+      }
+      if (data.subjects[cls].some(s => s.name === name)) {
+        showFloatingError('Subject already exists in this class', false, error);
+        return;
+      }
+      if (cls !== 'S.1' && compulsorySubjects.includes(name)) {
+        showFloatingError('Compulsory subjects cannot be added manually', false, error);
+        return;
+      }
+
+      data.subjects[cls].push({ name, teacher });
+      saveDataToFirestore();
+      loadSubjects();
+      showFloatingError('Subject added successfully!', true, error);
+      document.getElementById('subjectName').value = '';
+      document.getElementById('subjectTeacher').value = '';
+    }
+
+    function loadSubjects() {
+      const tbody = document.querySelector('#subjectTable tbody');
+      const filterClass = document.getElementById('subjectFilterClass').value;
+      tbody.innerHTML = '';
+      let subjectsToShow = [];
+      Object.keys(data.subjects).forEach(cls => {
+        if (!filterClass || cls === filterClass) {
+          subjectsToShow = subjectsToShow.concat(data.subjects[cls].map(s => ({...s, class: cls})));
+        }
+      });
+      subjectsToShow.sort((a, b) => a.class.localeCompare(b.class) || a.name.localeCompare(b.name));
+      subjectsToShow.forEach(subject => {
+        const isCompulsory = compulsorySubjects.includes(subject.name) && ['S.2', 'S.3', 'S.4'].includes(subject.class);
+        const deleteBtn = isCompulsory ? '<button disabled style="background-color: #ccc;">Delete</button>' : `<button onclick="deleteSubject('${subject.class}', '${subject.name}')" style="background-color:#e74c3c;">Delete</button>`;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${subject.name}</td><td>${subject.class}</td><td>${subject.teacher || 'N/A'}</td>
+                        <td><button onclick="editSubject('${subject.class}', '${subject.name}')">Edit</button> ${deleteBtn}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function editSubject(cls, name) {
+      const subject = data.subjects[cls].find(s => s.name === name);
+      if (!subject) return;
+      document.getElementById('editSubjectName').value = subject.name;
+      document.getElementById('editSubjectTeacher').value = subject.teacher || '';
+      document.getElementById('editSubjectModal').style.display = 'block';
+      window.currentEditSubject = { cls, name };
+    }
+
+    function saveEditSubject() {
+      if (!window.currentEditSubject) return;
+      const teacher = document.getElementById('editSubjectTeacher').value.trim().toUpperCase();
+      const subject = data.subjects[window.currentEditSubject.cls].find(s => s.name === window.currentEditSubject.name);
+      if (subject) {
+        subject.teacher = teacher;
+        saveDataToFirestore();
+        loadSubjects();
+        showFloatingError('Subject Initials updated successfully!', true, document.getElementById('subjectError'));
+      }
+      closeEditSubjectModal();
+    }
+
+    function closeEditSubjectModal() {
+      document.getElementById('editSubjectModal').style.display = 'none';
+      document.getElementById('editSubjectName').value = '';
+      document.getElementById('editSubjectTeacher').value = '';
+      window.currentEditSubject = null;
+    }
+
+    function deleteSubject(cls, subjectName) {
+      if (confirm('Delete this subject? Marks will be removed.')) {
+        data.subjects[cls] = data.subjects[cls].filter(s => s.name !== subjectName);
+        data.marks = data.marks.filter(m => m.subject !== subjectName || m.class !== cls);
+        saveDataToFirestore();
+        loadSubjects();
+      }
+    }
+
+    // Settings: Grading
+    function addGrade() {
+      const name = document.getElementById('gradeName').value.trim().toUpperCase();
+      const min = parseInt(document.getElementById('gradeMin').value);
+      const max = parseInt(document.getElementById('gradeMax').value);
+      const descriptor = document.getElementById('gradeDescriptor').value.trim().toUpperCase();
+      const error = document.getElementById('gradeError');
+
+      if (!name || isNaN(min) || isNaN(max) || !descriptor) {
+        showFloatingError('Please fill all fields', false, error);
+        return;
+      }
+      if (min < 0 || max > 100 || min > max) {
+        showFloatingError('Invalid range (0-100, min <= max)', false, error);
+        return;
+      }
+      if (data.grading.some(g => g.grade !== name && ((min >= g.min && min <= g.max) || (max >= g.min && max <= g.max)))) {
+        showFloatingError('Range overlaps with existing grade', false, error);
+        return;
+      }
+
+      data.grading = data.grading.filter(g => g.grade !== name);
+      data.grading.push({ grade: name, min, max, descriptor });
+      data.grading.sort((a, b) => b.min - a.min);
+      saveDataToFirestore();
+      loadGrades();
+      showFloatingError('Grade added successfully!', true, error);
+      document.getElementById('gradeName').value = '';
+      document.getElementById('gradeMin').value = '';
+      document.getElementById('gradeMax').value = '';
+      document.getElementById('gradeDescriptor').value = '';
+    }
+
+    function loadGrades() {
+      const tbody = document.querySelector('#gradeTable tbody');
+      tbody.innerHTML = '';
+      data.grading.forEach(grade => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${grade.grade}</td><td>${grade.min}</td><td>${grade.max}</td><td>${grade.descriptor}</td>
+                        <td><button onclick="deleteGrade('${grade.grade}')" style="background-color:#e74c3c;">Delete</button></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function deleteGrade(gradeName) {
+      if (confirm('Delete this grade?')) {
+        data.grading = data.grading.filter(g => g.grade !== gradeName);
+        saveDataToFirestore();
+        loadGrades();
+      }
+    }
+
+    // Dark mode toggle
+    function toggleDarkMode(){
+      const body = document.body;
+      const nav = document.querySelector('nav');
+      const statsCards = document.querySelectorAll('.stats-card');
+      const pages = document.querySelectorAll('.page');
+      const dashboard = document.getElementById('dashboard');
+      const statsSection = document.getElementById('stats');
+      const subjectModal = document.getElementById('subjectModal');
+      const passwordModal = document.getElementById('passwordModal');
+      const editSubjectModal = document.getElementById('editSubjectModal');
+      const editStudentModal = document.getElementById('editStudentModal');
+      const changePasswordModal = document.getElementById('changePasswordModal');
+      passwordModal.classList.toggle('dark-mode');
+      editSubjectModal.classList.toggle('dark-mode');
+      editStudentModal.classList.toggle('dark-mode');
+      changePasswordModal.classList.toggle('dark-mode');
+      body.classList.toggle('dark-mode');
+      nav.classList.toggle('dark-mode');
+      dashboard.classList.toggle('dark-mode');
+      statsSection.classList.toggle('dark-mode');
+      subjectModal.classList.toggle('dark-mode');
+      statsCards.forEach(card => card.classList.toggle('dark-mode'));
+      pages.forEach(page => page.classList.toggle('dark-mode'));
+      const button = document.getElementById('toggle-button');
+      if(body.classList.contains('dark-mode')){
+        button.textContent = 'Light Mode';
+      }else{
+        button.textContent = 'Dark Mode';
+      }
+    }
+
+    document.getElementById('toggle-button').addEventListener('click', toggleDarkMode);
+
+    // Import/Export
+    function exportData() {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'school_data.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importData() {
+      const fileInput = document.getElementById('importFile');
+      const error = document.getElementById('importExportError');
+      if (!fileInput.files[0]) {
+        showFloatingError('Please select a file', false, error);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          imported.students.forEach(s => {
+            if (!data.students.some(ds => ds.id === s.id)) {
+              data.students.push(s);
+            }
+          });
+          Object.keys(imported.subjects).forEach(cls => {
+            data.subjects[cls] = [...new Set([...data.subjects[cls].map(s=>s.name), ...imported.subjects[cls].map(s=>s.name)])].map(name => {
+              const existing = data.subjects[cls].find(s => s.name === name) || imported.subjects[cls].find(s => s.name === name);
+              return { name, teacher: existing.teacher || '' };
+            });
+          });
+          imported.marks.forEach(m => {
+            const existing = data.marks.find(dm => dm.studentId === m.studentId && dm.subject === m.subject);
+            if (!existing) {
+              data.marks.push(m);
+            } else {
+              Object.assign(existing, m);
+            }
+          });
+
+          if (imported.grading) data.grading = imported.grading;
+          if (imported.lockPassword) {
+            data.lockPassword = imported.lockPassword;
+            correctPassword = imported.lockPassword;
+          }
+          saveDataToFirestore();
+          loadStudents();
+          loadSubjects();
+          loadGrades();
+          showFloatingError('Data imported successfully', true, error);
+        } catch (e) {
+          showFloatingError('Invalid JSON file', false, error);
+        }
+      };
+      reader.readAsText(fileInput.files[0]);
+    }
+
+        function clearAllData() {
+        // Step 1: Show password modal first
+        showClearDataPasswordModal();
+        }
+
+        function showClearDataPasswordModal() {
+        const modal = document.getElementById("clearDataPasswordModal");
+        modal.style.display = "block";
+
+        // Apply dark-mode class if body is in dark mode
+        if (document.body.classList.contains('dark-mode')) {
+            modal.classList.add('dark-mode');
+        } else {
+            modal.classList.remove('dark-mode');
+        }
+
+        document.getElementById("clearDataPasswordInput").value = "";
+        document.getElementById("clearDataPwdError").classList.remove("show");
+        }
+
+        function closeClearDataPasswordModal() {
+        document.getElementById("clearDataPasswordModal").style.display = "none";
+        }
+
+        function verifyClearDataPassword() {
+        const inputPwd = document.getElementById("clearDataPasswordInput").value.trim();
+        const errorEl = document.getElementById("clearDataPwdError");
+
+        if (inputPwd === correctPassword) {
+            // Password correct → close modal and now ask for final confirmation
+            closeClearDataPasswordModal();
+            confirmAndClearData();
+        } else {
+            // Wrong password → show error, stay on modal
+            showFloatingError("Incorrect password. Action cancelled.", false, errorEl);
+        }
+        }
+
+        function confirmAndClearData() {
+        // Step 2: Only now show the "Are you sure?" dialog
+        if (confirm('Are you REALLY sure you want to delete ALL data?\n\n• All students data\n• All marks data\n• All subjects data\n• Marks Password will also be reset to default (jiib)\n\nThis CANNOT be undone!')) {
+            performClearAllData();
+        }
+        }
+
+        function performClearAllData() {
+        // The actual data clearing
+        data = {
+            students: [],
+            subjects: {
+            'S.1': [],
+            'S.2': compulsorySubjects.map(name => ({ name, teacher: '' })),
+            'S.3': compulsorySubjects.map(name => ({ name, teacher: '' })),
+            'S.4': compulsorySubjects.map(name => ({ name, teacher: '' }))
+            },
+            marks: [],
+            grading: [
+            { grade: 'A', min: 80, max: 100, descriptor: 'EXCEPTIONAL'},
+            { grade: 'B', min: 70, max: 79, descriptor: 'OUTSTANDING'},
+            { grade: 'C', min: 60, max: 69, descriptor: 'SATISFACTORY'},
+            { grade: 'D', min: 50, max: 59, descriptor: 'BASIC'},
+            { grade: 'E', min: 0, max: 49, descriptor: 'ELEMENTARY'},
+            ],
+            lockPassword: "jiib"
+        };
+        correctPassword = "jiib";
+        saveDataToFirestore();
+        loadStudents();
+        loadSubjects();
+        loadGrades();
+        loadStats();
+        showFloatingError('All data has been successfully cleared and reset.', true, document.getElementById('importExportError'));
+        }
+
+    // Initialize
+    showPage('dashboard');
+  </script>
+</body>
+</html>
